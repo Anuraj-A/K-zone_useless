@@ -65,15 +65,13 @@ Open your web browser and navigate to http://127.0.0.1:5000.
 ### Project Documentation
 For Software:
 
-# Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+# Screenshots
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+![Main Page of K-Zone Patrol](./assets/screenshot-main-page.png)
+*The main landing page of the application.*
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+![Example Result Screen](./assets/screenshot-result.png)
+*The result page showing the classification after a successful analysis.*
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
