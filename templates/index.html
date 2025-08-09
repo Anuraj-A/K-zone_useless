@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K-Zone Patrol - Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Variables for Easy Theming --- */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-color-dark: #4338ca;
+            --secondary-color: #10b981;
+            --text-color-primary: #1f2937;
+            --text-color-secondary: #6b7280;
+            --bg-color: #f9fafb;
+            --card-bg-color: #ffffff;
+            --border-color: #d1d5db;
+            --border-color-active: #4f46e5;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+        }
+
+        /* --- General & Body Styles --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Main Container Card --- */
+        .container {
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        /* --- Logo and Typography --- */
+        img.logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+
+        p.subtitle {
+            font-size: 1.125rem;
+            color: var(--text-color-secondary);
+            margin: 0 0 2rem 0;
+            line-height: 1.6;
+        }
+
+        /* --- Form Elements: Interactive Upload Area --- */
+        form {
+            width: 100%;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-area {
+            width: 100%;
+            padding: 2rem;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: #fdfdff;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .upload-area.drag-over {
+            border-color: var(--border-color-active);
+            background-color: #f4f4ff;
+        }
+
+        .upload-area .icon {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area .upload-text {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .upload-area .upload-hint {
+            font-size: 0.875rem;
+            color: var(--text-color-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        /* --- Submit Button --- */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-color-dark);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Result Section --- */
+        .result-card {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            background-color: #fdfdff;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-card h2 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color-secondary);
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .result-card .prediction-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="K-Zone Patrol Logo">
+        
+        <h1>K-Zone Patrol</h1>
+        <p class="subtitle">An AI-powered tool to analyze road damage severity from an image.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <label for="imageUpload" class="upload-area" id="uploadArea">
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                      <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2z"/>
+                    </svg>
+                </div>
+                <div class="upload-text" id="uploadText">Click to upload or drag and drop</div>
+                <div class="upload-hint" id="uploadHint">Supports: PNG, JPG, JPEG</div>
+            </label>
+            <input type="file" name="image" id="imageUpload" required>
+            
+            <button type="submit">Classify Image</button>
+        </form>
+
+        {% if result %}
+        <div class="result-card">
+            <h2>Classification Result</h2>
+            <div class="prediction-value">{{ result }}</div>
+            <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Pothole Image">
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('imageUpload');
+        const uploadText = document.getElementById('uploadText');
+        const uploadHint = document.getElementById('uploadHint');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop area when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('drag-over'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('drag-over'), false);
+        });
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            fileInput.files = files;
+            handleFiles(files);
+        }
+
+        // Update UI when a file is selected (either by click or drop)
+        fileInput.addEventListener('change', () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                uploadText.textContent = files[0].name;
+                uploadHint.textContent = `${(files[0].size / 1024).toFixed(2)} KB`;
+            }
+        }
+    </script>
+</body>
+</html>
