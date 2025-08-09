@@ -68,9 +68,11 @@ For Software:
 # Screenshots
 
 ![Main Page of K-Zone Patrol](./assets/screenshot-main-page.png)
+
 *The main landing page of the application.*
 
 ![Example Result Screen](./assets/screenshot-result.png)
+
 *The result page showing the classification after a successful analysis.*
 
 ---
